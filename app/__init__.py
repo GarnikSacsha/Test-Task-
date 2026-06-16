@@ -1,0 +1,2 @@
+"""Tempail scraper API package."""
+

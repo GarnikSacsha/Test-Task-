@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tempail Scraper Console</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">UNILIME test task</p>
+          <h1>Tempail Scraper Console</h1>
+          <p class="subtitle">A Playwright-powered REST API with a live operator view for temporary inbox automation.</p>
+        </div>
+        <div class="status-strip">
+          <span id="health-dot" class="dot"></span>
+          <span id="health-text">Checking API</span>
+        </div>
+      </section>
+
+      <section class="toolbar">
+        <button id="load-email" type="button">Get email</button>
+        <button id="load-inbox" type="button">Refresh inbox</button>
+        <button id="new-email" type="button" class="danger">New address</button>
+        <a href="/docs" target="_blank" rel="noreferrer">OpenAPI</a>
+      </section>
+
+      <section class="grid">
+        <article class="panel address-panel">
+          <div class="panel-head">
+            <span>Current address</span>
+            <button id="copy-email" type="button" class="ghost">Copy</button>
+          </div>
+          <code id="email-value">not loaded yet</code>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <span>Inbox</span>
+            <span id="inbox-count" class="counter">0</span>
+          </div>
+          <div id="inbox-list" class="inbox empty">No messages loaded</div>
+        </article>
+
+        <article class="panel detail">
+          <div class="panel-head">
+            <span>Message content</span>
+            <span id="message-id" class="muted">select a message</span>
+          </div>
+          <pre id="message-content">Waiting for a message selection.</pre>
+        </article>
+
+        <article class="panel log-panel">
+          <div class="panel-head">
+            <span>Request log</span>
+            <button id="clear-log" type="button" class="ghost">Clear</button>
+          </div>
+          <ol id="log"></ol>
+        </article>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
+

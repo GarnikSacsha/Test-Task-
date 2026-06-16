@@ -1,0 +1,86 @@
+# API Documentation
+
+Base URL for local development: `http://127.0.0.1:8000`
+
+## `GET /api/email`
+
+Returns the current temporary email address.
+
+```json
+{
+  "email": "example@tempail.com",
+  "meta": {
+    "requested_at": "2026-06-16T18:00:00Z",
+    "source": "tempail.com"
+  }
+}
+```
+
+## `GET /api/inbox`
+
+Returns the current inbox.
+
+```json
+{
+  "email": "example@tempail.com",
+  "count": 1,
+  "messages": [
+    {
+      "id": "welcome-demo",
+      "sender": "robot@example.com",
+      "subject": "Verification code",
+      "time": "now",
+      "preview": "Your code is 482913"
+    }
+  ],
+  "meta": {
+    "requested_at": "2026-06-16T18:00:00Z",
+    "source": "tempail.com"
+  }
+}
+```
+
+## `GET /api/email/{id}`
+
+Returns full content for one email.
+
+```json
+{
+  "id": "welcome-demo",
+  "sender": "robot@example.com",
+  "subject": "Verification code",
+  "time": "now",
+  "text": "Your code is 482913",
+  "html": "<p>Your code is <strong>482913</strong></p>",
+  "raw": {},
+  "meta": {
+    "requested_at": "2026-06-16T18:00:00Z",
+    "source": "tempail.com"
+  }
+}
+```
+
+## `POST /api/email/refresh`
+
+Refreshes the current session and returns the new address.
+
+```json
+{
+  "email": "new@example.com",
+  "meta": {
+    "requested_at": "2026-06-16T18:00:00Z",
+    "source": "tempail.com"
+  }
+}
+```
+
+## Error Format
+
+```json
+{
+  "error": "Message 'abc' was not found",
+  "detail": null,
+  "code": "message_not_found"
+}
+```
+
