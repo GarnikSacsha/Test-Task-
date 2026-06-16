@@ -7,6 +7,7 @@ from app.models.schemas import (
     HealthResponse,
     HistoryResponse,
     InboxResponse,
+    ModeResponse,
 )
 
 router = APIRouter()
@@ -29,6 +30,17 @@ async def health(service: TempMailService = service_dependency) -> HealthRespons
         demo_mode=service.settings.demo_mode,
         storage="enabled" if service.settings.storage_enabled else "disabled",
     )
+
+
+@router.get("/api/mode", response_model=ModeResponse, tags=["system"])
+async def mode(service: TempMailService = service_dependency) -> ModeResponse:
+    live = not service.settings.demo_mode
+    note = (
+        "Live Playwright scraper is active. tempail.com may still return an anti-bot challenge."
+        if live
+        else "Demo mode is active for stable public presentation. Set DEMO_MODE=false to use live Playwright scraping."
+    )
+    return ModeResponse(mode="live" if live else "demo", live_scraper_enabled=live, note=note)
 
 
 @router.get("/api/email", response_model=EmailAddressResponse, tags=["mail"])

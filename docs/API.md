@@ -2,6 +2,18 @@
 
 Base URL for local development: `http://127.0.0.1:8000`
 
+## `GET /api/mode`
+
+Returns whether the app is running with deterministic demo data or the live Playwright scraper.
+
+```json
+{
+  "mode": "demo",
+  "live_scraper_enabled": false,
+  "note": "Demo mode is active for stable public presentation..."
+}
+```
+
 ## `GET /api/email`
 
 Returns the current temporary email address.

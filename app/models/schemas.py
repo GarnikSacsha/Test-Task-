@@ -55,6 +55,12 @@ class HealthResponse(BaseModel):
     storage: str = "disabled"
 
 
+class ModeResponse(BaseModel):
+    mode: str
+    live_scraper_enabled: bool
+    note: str
+
+
 class SessionSnapshot(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 

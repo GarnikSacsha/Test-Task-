@@ -45,11 +45,19 @@ Open:
 
 Set `DEMO_MODE=true` in `.env` to run the API and UI with deterministic local data. This is useful for screenshots, tests, and Railway smoke checks when the external service is unavailable.
 
+The assessment scraper itself is implemented in live mode. Set `DEMO_MODE=false` to use the real Playwright automation against `tempail.com`.
+
 ## Anti-Bot Challenge
 
 `tempail.com` may occasionally show a captcha to automated browsers. The API detects this and returns a structured JSON error with `code: "anti_bot_challenge"` instead of crashing.
 
 For local manual validation, set `BROWSER_HEADLESS=false`, restart the server, and solve the captcha in the browser window. For UI demos and automated tests, use `DEMO_MODE=true`.
+
+The current runtime mode is exposed at:
+
+```text
+GET /api/mode
+```
 
 ## Docker
 
