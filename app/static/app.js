@@ -11,6 +11,18 @@ function log(message, ok = true) {
   $("#log").prepend(item);
 }
 
+async function withButtonState(button, label, task) {
+  const previousText = button.textContent;
+  button.disabled = true;
+  button.textContent = label;
+  try {
+    return await task();
+  } finally {
+    button.disabled = false;
+    button.textContent = previousText;
+  }
+}
+
 async function api(path, options = {}) {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json" },
@@ -43,14 +55,18 @@ async function checkHealth() {
   }
 }
 
-async function loadEmail() {
+async function loadEmail(scrollToConsole = false) {
   try {
+    log("Requesting current temp email");
     const data = await api("/api/email");
     state.email = data.email;
     $("#email-value").textContent = data.email;
     $("#hero-email-value").textContent = data.email;
     log(`Loaded email ${data.email}`);
     await checkHealth();
+    if (scrollToConsole) {
+      $("#console").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   } catch (error) {
     log(error.message, false);
   }
@@ -58,6 +74,7 @@ async function loadEmail() {
 
 async function loadInbox() {
   try {
+    log("Refreshing inbox");
     const data = await api("/api/inbox");
     state.messages = data.messages;
     $("#inbox-count").textContent = data.count;
@@ -102,6 +119,7 @@ async function loadMessage(id) {
 
 async function refreshEmail() {
   try {
+    log("Requesting a fresh address");
     const data = await api("/api/email/refresh", { method: "POST" });
     state.email = data.email;
     state.messages = [];
@@ -121,6 +139,7 @@ async function refreshEmail() {
 
 async function loadHistory() {
   try {
+    log("Loading persisted history");
     const data = await api("/api/history?limit=20");
     $("#history-content").textContent = JSON.stringify(data, null, 2);
     log(`Loaded persisted history: ${data.events.length} event(s)`);
@@ -138,11 +157,21 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-$("#load-email").addEventListener("click", loadEmail);
-$("#hero-email").addEventListener("click", loadEmail);
-$("#load-inbox").addEventListener("click", loadInbox);
-$("#new-email").addEventListener("click", refreshEmail);
-$("#load-history").addEventListener("click", loadHistory);
+$("#load-email").addEventListener("click", (event) =>
+  withButtonState(event.currentTarget, "Loading...", () => loadEmail(false)),
+);
+$("#hero-email").addEventListener("click", (event) =>
+  withButtonState(event.currentTarget, "Loading...", () => loadEmail(true)),
+);
+$("#load-inbox").addEventListener("click", (event) =>
+  withButtonState(event.currentTarget, "Loading...", loadInbox),
+);
+$("#new-email").addEventListener("click", (event) =>
+  withButtonState(event.currentTarget, "Loading...", refreshEmail),
+);
+$("#load-history").addEventListener("click", (event) =>
+  withButtonState(event.currentTarget, "Loading...", loadHistory),
+);
 $("#copy-email").addEventListener("click", async () => {
   if (!state.email) return;
   await navigator.clipboard.writeText(state.email);

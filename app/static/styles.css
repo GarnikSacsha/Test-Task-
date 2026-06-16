@@ -388,6 +388,11 @@ button:hover,
   background: var(--lime);
 }
 
+button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 #new-email,
 .toolbar a {
   background: var(--ink);
