@@ -154,6 +154,7 @@ class Storage:
         }
 
     def _connect(self) -> sqlite3.Connection:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
         return sqlite3.connect(self.path)
 
     def _resolve_path(self, settings: Settings) -> Path:
