@@ -16,6 +16,12 @@ DEMO_MODE=false
 
 Railway provides `PORT`, so no manual port value is required.
 
+The container starts through `scripts/start.sh`, which prints the selected port before launching Uvicorn. In Railway logs, a healthy startup should include a line like:
+
+```text
+Starting Tempail Scraper API on port 12345
+```
+
 ## Smoke Checks
 
 After deploy:
