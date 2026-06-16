@@ -5,6 +5,7 @@ from typing import Protocol
 from app.automation.exceptions import ScraperError, TargetTimeoutError
 from app.automation.scraper import TempailScraper
 from app.core.config import Settings
+from app.core.storage import Storage
 from app.models.schemas import EmailContentResponse, InboxMessage, SessionSnapshot
 
 logger = logging.getLogger(__name__)
@@ -80,8 +81,10 @@ class TempMailService:
     def __init__(self, settings: Settings, backend: MailBackend | None = None):
         self.settings = settings
         self.backend: MailBackend = backend or (DemoMailBackend() if settings.demo_mode else TempailScraper(settings))
+        self.storage = Storage(settings)
 
     async def startup(self) -> None:
+        self.storage.initialize()
         try:
             await self.backend.start()
         except ScraperError as exc:
@@ -92,16 +95,28 @@ class TempMailService:
         await self.backend.close()
 
     async def email(self) -> str:
-        return await self._with_timeout(self.backend.get_current_email())
+        email = await self._with_timeout(self.backend.get_current_email())
+        self.storage.record_email(email)
+        return email
 
     async def inbox(self) -> list[InboxMessage]:
-        return await self._with_timeout(self.backend.get_inbox_list())
+        messages = await self._with_timeout(self.backend.get_inbox_list())
+        self.storage.record_messages(self.backend.current_email, messages)
+        return messages
 
     async def content(self, msg_id: str) -> EmailContentResponse:
-        return await self._with_timeout(self.backend.get_email_body(msg_id))
+        content = await self._with_timeout(self.backend.get_email_body(msg_id))
+        self.storage.record_content(content)
+        return content
 
     async def refresh(self) -> str:
-        return await self._with_timeout(self.backend.refresh_session())
+        email = await self._with_timeout(self.backend.refresh_session())
+        self.storage.record_email(email)
+        self.storage.record_event("email_refreshed", {"email": email})
+        return email
+
+    def history(self, limit: int = 25) -> dict:
+        return self.storage.history(limit)
 
     def snapshot(self) -> SessionSnapshot:
         return SessionSnapshot(
@@ -116,4 +131,3 @@ class TempMailService:
             return await asyncio.wait_for(awaitable, timeout=self.settings.api_request_timeout_seconds)
         except asyncio.TimeoutError as exc:
             raise TargetTimeoutError("API request exceeded configured timeout") from exc
-

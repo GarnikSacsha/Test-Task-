@@ -35,6 +35,21 @@ If Chromium fails to start on a small Railway plan, temporarily set `DEMO_MODE=t
 
 If `tempail.com` presents a captcha to Railway's headless browser, the API returns `code: "anti_bot_challenge"`. This is expected external-site protection, not a process crash. Keep `DEMO_MODE=true` for presentation environments where the live target blocks automation.
 
+## Persistent Storage
+
+To persist SQLite data across Railway redeploys:
+
+1. Add a Railway Volume to the `web` service.
+2. Set the volume mount path to `/app/data`.
+3. Keep these variables:
+
+```text
+STORAGE_ENABLED=true
+DATA_DIR=data
+```
+
+If no volume is attached, the app still runs, but `data/tempail.sqlite3` is stored on ephemeral container storage.
+
 ## Docker Locally
 
 ```bash

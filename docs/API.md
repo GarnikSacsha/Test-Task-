@@ -74,6 +74,19 @@ Refreshes the current session and returns the new address.
 }
 ```
 
+## `GET /api/history`
+
+Returns persisted scraper activity from SQLite.
+
+```json
+{
+  "database_path": "data/tempail.sqlite3",
+  "emails": [],
+  "messages": [],
+  "events": []
+}
+```
+
 ## Error Format
 
 ```json

@@ -8,6 +8,7 @@
 - Operator console.
 - JSON error mapping.
 - Environment configuration.
+- SQLite persistence for scraper events, email addresses, and message snapshots.
 - Docker and Railway files.
 - API contract tests.
 - Documentation.
@@ -28,5 +29,4 @@
 ## Next Improvements
 
 - Add session tokens for multiple independent inboxes.
-- Add screenshots/tracing on scraper errors.
 - Add a background inbox watcher with Server-Sent Events for live UI updates.

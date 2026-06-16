@@ -97,6 +97,7 @@
           <button id="load-inbox" type="button">Refresh inbox</button>
           <button id="new-email" type="button">New address</button>
           <a href="/health" target="_blank" rel="noreferrer">Health JSON</a>
+          <button id="load-history" type="button">History</button>
         </section>
 
         <section class="grid">
@@ -130,6 +131,14 @@
               <button id="clear-log" type="button" class="ghost">Clear</button>
             </div>
             <ol id="log"></ol>
+          </article>
+
+          <article class="panel storage-panel">
+            <div class="panel-head">
+              <span>Persistent storage</span>
+              <span id="storage-state" class="muted">checking</span>
+            </div>
+            <pre id="history-content">Click History to load persisted emails, messages, and events.</pre>
           </article>
         </section>
       </section>

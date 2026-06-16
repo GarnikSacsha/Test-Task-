@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     cors_origins: str = "*"
 
     demo_mode: bool = False
+    storage_enabled: bool = True
+    data_dir: str = "data"
+    database_path: str | None = None
 
     @field_validator("*", mode="before")
     @classmethod

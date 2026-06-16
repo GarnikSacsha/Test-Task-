@@ -30,6 +30,7 @@ async function checkHealth() {
     $("#health-text").textContent = `${data.status} / ${data.browser}`;
     $("#hero-browser").textContent = data.demo_mode ? "demo mode" : data.browser;
     $("#hero-count").textContent = data.inbox_count;
+    $("#storage-state").textContent = data.storage;
     if (data.current_email) {
       state.email = data.current_email;
       $("#email-value").textContent = data.current_email;
@@ -118,6 +119,16 @@ async function refreshEmail() {
   }
 }
 
+async function loadHistory() {
+  try {
+    const data = await api("/api/history?limit=20");
+    $("#history-content").textContent = JSON.stringify(data, null, 2);
+    log(`Loaded persisted history: ${data.events.length} event(s)`);
+  } catch (error) {
+    log(error.message, false);
+  }
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -131,6 +142,7 @@ $("#load-email").addEventListener("click", loadEmail);
 $("#hero-email").addEventListener("click", loadEmail);
 $("#load-inbox").addEventListener("click", loadInbox);
 $("#new-email").addEventListener("click", refreshEmail);
+$("#load-history").addEventListener("click", loadHistory);
 $("#copy-email").addEventListener("click", async () => {
   if (!state.email) return;
   await navigator.clipboard.writeText(state.email);

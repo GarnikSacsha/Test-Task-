@@ -509,6 +509,10 @@ button.ghost {
   grid-row: span 2;
 }
 
+.storage-panel {
+  grid-column: span 2;
+}
+
 pre {
   min-height: 430px;
   max-height: 62vh;
@@ -623,5 +627,9 @@ pre {
 
   .detail {
     grid-row: auto;
+  }
+
+  .storage-panel {
+    grid-column: auto;
   }
 }

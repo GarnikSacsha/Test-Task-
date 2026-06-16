@@ -1,7 +1,13 @@
 from fastapi import APIRouter, Depends, Request
 
 from app.automation.service import TempMailService
-from app.models.schemas import EmailAddressResponse, EmailContentResponse, HealthResponse, InboxResponse
+from app.models.schemas import (
+    EmailAddressResponse,
+    EmailContentResponse,
+    HealthResponse,
+    HistoryResponse,
+    InboxResponse,
+)
 
 router = APIRouter()
 
@@ -21,6 +27,7 @@ async def health(service: TempMailService = service_dependency) -> HealthRespons
         current_email=service.backend.current_email,
         inbox_count=service.backend.inbox_count,
         demo_mode=service.settings.demo_mode,
+        storage="enabled" if service.settings.storage_enabled else "disabled",
     )
 
 
@@ -46,3 +53,8 @@ async def get_email_content(
 @router.post("/api/email/refresh", response_model=EmailAddressResponse, tags=["mail"])
 async def refresh_email(service: TempMailService = service_dependency) -> EmailAddressResponse:
     return EmailAddressResponse(email=await service.refresh())
+
+
+@router.get("/api/history", response_model=HistoryResponse, tags=["mail"])
+async def get_history(limit: int = 25, service: TempMailService = service_dependency) -> HistoryResponse:
+    return HistoryResponse(**service.history(limit=min(max(limit, 1), 100)))

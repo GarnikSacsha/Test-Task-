@@ -10,5 +10,5 @@ build/
 *.egg-info/
 playwright-report/
 test-results/
+data/
 .DS_Store
-

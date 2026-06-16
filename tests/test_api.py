@@ -1,7 +1,9 @@
 import os
+import tempfile
 
 os.environ["DEMO_MODE"] = "true"
 os.environ["APP_ENV"] = "test"
+os.environ["DATA_DIR"] = tempfile.mkdtemp(prefix="tempail-tests-")
 
 from fastapi.testclient import TestClient
 
@@ -32,6 +34,19 @@ def test_email_and_inbox_contracts() -> None:
     assert inbox_response.status_code == 200
     assert inbox_response.json()["count"] == 1
     assert inbox_response.json()["messages"][0]["id"] == "welcome-demo"
+
+
+def test_history_contract_records_activity() -> None:
+    with make_client() as client:
+        client.get("/api/email")
+        client.get("/api/inbox")
+        response = client.get("/api/history")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["database_path"]
+    assert payload["emails"][0]["address"] == "demo.tempail@example.com"
+    assert payload["events"]
 
 
 def test_email_content_and_refresh_contracts() -> None:

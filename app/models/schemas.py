@@ -52,6 +52,7 @@ class HealthResponse(BaseModel):
     current_email: str | None = None
     inbox_count: int = 0
     demo_mode: bool = False
+    storage: str = "disabled"
 
 
 class SessionSnapshot(BaseModel):
@@ -62,3 +63,9 @@ class SessionSnapshot(BaseModel):
     last_error: str | None = None
     browser_ready: bool = False
 
+
+class HistoryResponse(BaseModel):
+    database_path: str | None = None
+    emails: list[dict[str, Any]]
+    messages: list[dict[str, Any]]
+    events: list[dict[str, Any]]

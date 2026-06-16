@@ -23,6 +23,7 @@ The project was built for a technical assessment: generate a temporary email add
 | `GET` | `/api/email/{id}` | Returns full content for a specific message. |
 | `POST` | `/api/email/refresh` | Generates a new temporary email address. |
 | `GET` | `/health` | Reports service, browser, and demo-mode status. |
+| `GET` | `/api/history` | Returns persisted emails, messages, and scraper events from SQLite. |
 
 ## Local Setup
 
@@ -88,3 +89,15 @@ ruff check .
 ```
 
 Tests run in `DEMO_MODE=true`, so they validate API contracts without launching a real browser.
+
+## Persistence
+
+The app stores scraper activity in SQLite when `STORAGE_ENABLED=true`. By default it writes to `./data/tempail.sqlite3`.
+
+On Railway, create a Volume and mount it to:
+
+```text
+/app/data
+```
+
+Railway exposes the mounted path through `RAILWAY_VOLUME_MOUNT_PATH`; the app uses it automatically. Without a volume, SQLite still works, but data is ephemeral and can disappear on redeploy.
