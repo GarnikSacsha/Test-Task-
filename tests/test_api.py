@@ -44,3 +44,17 @@ def test_email_content_and_refresh_contracts() -> None:
     assert refresh_response.status_code == 200
     assert refresh_response.json()["email"] == "fresh.demo.tempail@example.com"
 
+
+def test_settings_accept_railway_values_with_trailing_spaces() -> None:
+    os.environ["APP_ENV"] = "production "
+    os.environ["DEMO_MODE"] = "true "
+    get_settings.cache_clear()
+
+    settings = get_settings()
+
+    assert settings.app_env == "production"
+    assert settings.demo_mode is True
+
+    os.environ["APP_ENV"] = "test"
+    os.environ["DEMO_MODE"] = "true"
+    get_settings.cache_clear()

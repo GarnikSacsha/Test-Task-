@@ -1,6 +1,7 @@
 from functools import lru_cache
 from typing import Literal
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -23,8 +24,14 @@ class Settings(BaseSettings):
 
     demo_mode: bool = False
 
+    @field_validator("*", mode="before")
+    @classmethod
+    def strip_env_strings(cls, value):
+        if isinstance(value, str):
+            return value.strip()
+        return value
+
 
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-
