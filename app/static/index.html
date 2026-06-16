@@ -3,65 +3,138 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tempail Scraper Console</title>
+    <title>Unilime Tempail Scraper</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/">
+        <span>UN</span><strong>ILI</strong><span>ME</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="#console">Console</a>
+        <a href="#api">API</a>
+        <a href="/docs" target="_blank" rel="noreferrer">Docs</a>
+      </nav>
+      <a class="pill-link" href="/docs" target="_blank" rel="noreferrer">OpenAPI</a>
+    </header>
+
+    <main>
       <section class="hero">
-        <div>
-          <p class="eyebrow">UNILIME test task</p>
-          <h1>Tempail Scraper Console</h1>
-          <p class="subtitle">A Playwright-powered REST API with a live operator view for temporary inbox automation.</p>
-        </div>
-        <div class="status-strip">
-          <span id="health-dot" class="dot"></span>
-          <span id="health-text">Checking API</span>
-        </div>
-      </section>
-
-      <section class="toolbar">
-        <button id="load-email" type="button">Get email</button>
-        <button id="load-inbox" type="button">Refresh inbox</button>
-        <button id="new-email" type="button" class="danger">New address</button>
-        <a href="/docs" target="_blank" rel="noreferrer">OpenAPI</a>
-      </section>
-
-      <section class="grid">
-        <article class="panel address-panel">
-          <div class="panel-head">
-            <span>Current address</span>
-            <button id="copy-email" type="button" class="ghost">Copy</button>
+        <div class="hero-copy">
+          <p class="eyebrow">Python Playwright test task</p>
+          <h1>Smart Temp Mail Automation For QA Flows</h1>
+          <ul class="hero-points" aria-label="Core capabilities">
+            <li>Generate tempail.com inbox sessions through REST API</li>
+            <li>Monitor incoming emails and parse full message content</li>
+            <li>Handle empty inboxes, timeouts, stale sessions, and captcha states</li>
+          </ul>
+          <div class="hero-actions">
+            <button id="hero-email" type="button" class="outline-action">Get Temp Email</button>
+            <a class="dark-action" href="#console">Open Control Room</a>
           </div>
-          <code id="email-value">not loaded yet</code>
-        </article>
-
-        <article class="panel">
-          <div class="panel-head">
+        </div>
+        <aside class="hero-orbit" aria-label="Runtime summary">
+          <div class="lime-disc"></div>
+          <div class="orbit-card primary">
+            <span>Current Address</span>
+            <code id="hero-email-value">not loaded yet</code>
+          </div>
+          <div class="orbit-card">
+            <span>Browser</span>
+            <strong id="hero-browser">checking</strong>
+          </div>
+          <div class="orbit-card small-card">
             <span>Inbox</span>
-            <span id="inbox-count" class="counter">0</span>
+            <strong><b id="hero-count">0</b> messages</strong>
           </div>
-          <div id="inbox-list" class="inbox empty">No messages loaded</div>
-        </article>
+        </aside>
+      </section>
 
-        <article class="panel detail">
-          <div class="panel-head">
-            <span>Message content</span>
-            <span id="message-id" class="muted">select a message</span>
-          </div>
-          <pre id="message-content">Waiting for a message selection.</pre>
-        </article>
+      <section class="dark-band" id="api">
+        <div class="section-head">
+          <h2>What The Scraper Does</h2>
+          <p>Four required endpoints wrapped in a reviewer-friendly interface.</p>
+        </div>
+        <div class="capability-grid">
+          <article>
+            <span class="icon">01</span>
+            <h3>Generate Email</h3>
+            <p><code>GET /api/email</code> opens the browser session and extracts the active temp address.</p>
+          </article>
+          <article>
+            <span class="icon">02</span>
+            <h3>Monitor Inbox</h3>
+            <p><code>GET /api/inbox</code> returns sender, subject, timestamp, ID, and preview.</p>
+          </article>
+          <article>
+            <span class="icon">03</span>
+            <h3>Read Content</h3>
+            <p><code>GET /api/email/{id}</code> resolves a message and returns text, HTML, and metadata.</p>
+          </article>
+          <article>
+            <span class="icon">04</span>
+            <h3>Refresh Session</h3>
+            <p><code>POST /api/email/refresh</code> creates a fresh mailbox and resets cached inbox state.</p>
+          </article>
+        </div>
+      </section>
 
-        <article class="panel log-panel">
-          <div class="panel-head">
-            <span>Request log</span>
-            <button id="clear-log" type="button" class="ghost">Clear</button>
+      <section class="console-wrap" id="console">
+        <div class="console-title">
+          <div>
+            <p class="eyebrow">Live operator surface</p>
+            <h2>Scraper Control Room</h2>
           </div>
-          <ol id="log"></ol>
-        </article>
+          <div class="status-strip">
+            <span id="health-dot" class="dot"></span>
+            <span id="health-text">Checking API</span>
+          </div>
+        </div>
+
+        <section class="toolbar">
+          <button id="load-email" type="button">Get email</button>
+          <button id="load-inbox" type="button">Refresh inbox</button>
+          <button id="new-email" type="button">New address</button>
+          <a href="/health" target="_blank" rel="noreferrer">Health JSON</a>
+        </section>
+
+        <section class="grid">
+          <article class="panel address-panel">
+            <div class="panel-head">
+              <span>Current address</span>
+              <button id="copy-email" type="button" class="ghost">Copy</button>
+            </div>
+            <code id="email-value">not loaded yet</code>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <span>Inbox</span>
+              <span id="inbox-count" class="counter">0</span>
+            </div>
+            <div id="inbox-list" class="inbox empty">No messages loaded</div>
+          </article>
+
+          <article class="panel detail">
+            <div class="panel-head">
+              <span>Message content</span>
+              <span id="message-id" class="muted">select a message</span>
+            </div>
+            <pre id="message-content">Waiting for a message selection.</pre>
+          </article>
+
+          <article class="panel log-panel">
+            <div class="panel-head">
+              <span>Request log</span>
+              <button id="clear-log" type="button" class="ghost">Clear</button>
+            </div>
+            <ol id="log"></ol>
+          </article>
+        </section>
       </section>
     </main>
+
     <script src="/app.js"></script>
   </body>
 </html>
-
