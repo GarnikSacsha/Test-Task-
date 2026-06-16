@@ -21,6 +21,7 @@
 ## Known Risks
 
 - The target site can change selectors or anti-automation behavior.
+- `tempail.com` can present a captcha/anti-bot challenge. The API detects it and returns a structured `anti_bot_challenge` JSON error instead of failing silently.
 - A single shared browser session is intentionally simple; it is stable for this task, but a production multi-user API would need a browser/session pool.
 - Railway memory limits can affect Chromium startup on smaller plans.
 
@@ -29,4 +30,3 @@
 - Add session tokens for multiple independent inboxes.
 - Add screenshots/tracing on scraper errors.
 - Add a background inbox watcher with Server-Sent Events for live UI updates.
-

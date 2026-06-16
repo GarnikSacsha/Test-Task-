@@ -84,3 +84,11 @@ Refreshes the current session and returns the new address.
 }
 ```
 
+Common error codes:
+
+| Code | Meaning |
+| --- | --- |
+| `target_timeout` | The target page or API operation exceeded the configured timeout. |
+| `element_missing` | Expected tempail.com DOM elements were not present. |
+| `message_not_found` | The requested email ID is not visible in the current inbox. |
+| `anti_bot_challenge` | tempail.com presented a captcha or robot-verification page. |

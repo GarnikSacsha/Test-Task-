@@ -18,6 +18,7 @@ from playwright.async_api import (
 )
 
 from app.automation.exceptions import (
+    AntiBotChallengeError,
     BrowserUnavailableError,
     ElementMissingError,
     MessageNotFoundError,
@@ -194,6 +195,7 @@ class TempailScraper:
             self.state.page = await self.state.context.new_page()
             self.state.page.set_default_timeout(self.settings.browser_timeout_ms)
             await self.state.page.goto(self.settings.tempail_url, wait_until="domcontentloaded")
+            await self._raise_if_antibot_challenge()
             logger.info("Started Playwright session for %s", self.settings.tempail_url)
         except PlaywrightTimeoutError as exc:
             await self._close_unlocked()
@@ -223,6 +225,7 @@ class TempailScraper:
         page = self.state.page
         assert page is not None
         await page.wait_for_load_state("domcontentloaded")
+        await self._raise_if_antibot_challenge()
 
         candidates = [
             "#email",
@@ -252,6 +255,7 @@ class TempailScraper:
             raise ElementMissingError("Could not locate generated email on tempail.com") from exc
 
         body_text = await page.locator("body").inner_text()
+        self._raise_if_antibot_text(body_text)
         match = EMAIL_RE.search(body_text)
         if not match:
             raise ElementMissingError("Email-like text was not found after page load")
@@ -261,6 +265,7 @@ class TempailScraper:
         page = self.state.page
         assert page is not None
         await page.wait_for_load_state("domcontentloaded")
+        await self._raise_if_antibot_challenge()
         await self._click_first_matching(
             [
                 "button:has-text('Refresh')",
@@ -305,6 +310,31 @@ class TempailScraper:
             time=time,
             preview=text[:240],
         )
+
+    async def _raise_if_antibot_challenge(self) -> None:
+        page = self.state.page
+        assert page is not None
+        try:
+            text = await page.locator("body").inner_text(timeout=2_000)
+        except PlaywrightError:
+            return
+        self._raise_if_antibot_text(text)
+
+    def _raise_if_antibot_text(self, text: str) -> None:
+        normalized = text.lower()
+        markers = [
+            "please verify that you are not a robot",
+            "i'm not a robot",
+            "я не робот",
+            "recaptcha",
+            "captcha",
+        ]
+        if any(marker in normalized for marker in markers):
+            self.last_error = "tempail.com presented an anti-bot challenge"
+            raise AntiBotChallengeError(
+                "tempail.com presented an anti-bot challenge. "
+                "Run locally with BROWSER_HEADLESS=false and solve the captcha once, or use DEMO_MODE=true for demos."
+            )
 
     async def _find_message_row(self, message: InboxMessage):
         page = self.state.page

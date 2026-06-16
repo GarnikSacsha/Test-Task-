@@ -22,3 +22,7 @@ class MessageNotFoundError(ScraperError):
     code = "message_not_found"
     status_code = 404
 
+
+class AntiBotChallengeError(ScraperError):
+    code = "anti_bot_challenge"
+    status_code = 423

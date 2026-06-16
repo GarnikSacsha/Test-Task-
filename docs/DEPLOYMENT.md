@@ -27,6 +27,8 @@ curl https://your-service.up.railway.app/api/email
 
 If Chromium fails to start on a small Railway plan, temporarily set `DEMO_MODE=true` to verify the API and UI while investigating resource limits.
 
+If `tempail.com` presents a captcha to Railway's headless browser, the API returns `code: "anti_bot_challenge"`. This is expected external-site protection, not a process crash. Keep `DEMO_MODE=true` for presentation environments where the live target blocks automation.
+
 ## Docker Locally
 
 ```bash
@@ -34,4 +36,3 @@ docker compose up --build
 ```
 
 Open `http://127.0.0.1:8000`.
-

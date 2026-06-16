@@ -44,6 +44,12 @@ Open:
 
 Set `DEMO_MODE=true` in `.env` to run the API and UI with deterministic local data. This is useful for screenshots, tests, and Railway smoke checks when the external service is unavailable.
 
+## Anti-Bot Challenge
+
+`tempail.com` may occasionally show a captcha to automated browsers. The API detects this and returns a structured JSON error with `code: "anti_bot_challenge"` instead of crashing.
+
+For local manual validation, set `BROWSER_HEADLESS=false`, restart the server, and solve the captcha in the browser window. For UI demos and automated tests, use `DEMO_MODE=true`.
+
 ## Docker
 
 ```bash
@@ -82,4 +88,3 @@ ruff check .
 ```
 
 Tests run in `DEMO_MODE=true`, so they validate API contracts without launching a real browser.
-
